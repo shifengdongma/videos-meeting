@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "repo=\"G:/videos meeting\"; branch=$(git -C \"$repo\" branch --show-current) && git -C \"$repo\" add -A && if git -C \"$repo\" diff --cached --quiet; then exit 0; fi && git -C \"$repo\" commit -m \"chore: auto-commit latest changes\" && git -C \"$repo\" push origin \"$branch\"",
+            "shell": "bash",
+            "timeout": 120,
+            "statusMessage": "Auto-committing and pushing changes"
+          }
+        ]
+      }
+    ]
+  }
+}

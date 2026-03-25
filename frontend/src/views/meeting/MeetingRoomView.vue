@@ -1,0 +1,338 @@
+<template>
+  <div class="room-page">
+    <div class="room-head">
+      <div>
+        <div class="room-eyebrow">Meeting console</div>
+        <h1>会议室 #{{ meetingId }}</h1>
+        <p>统一管理本地音视频、桌面共享、远端参会流与在线表决。</p>
+      </div>
+      <div class="room-actions">
+        <el-button type="primary" @click="openCamera">打开摄像头/麦克风</el-button>
+        <el-button @click="shareScreen">桌面共享</el-button>
+        <el-button v-if="canStartVote" @click="showVoteDialog = true">发起表决</el-button>
+      </div>
+    </div>
+
+    <div class="room-summary">
+      <div class="summary-item">
+        <div class="summary-label">本地设备</div>
+        <div class="summary-value">{{ localStream ? '已接入' : '未开启' }}</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">桌面共享</div>
+        <div class="summary-value">{{ screenStream ? '共享中' : '未共享' }}</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">远端成员</div>
+        <div class="summary-value">{{ remoteStreams.length }}</div>
+      </div>
+    </div>
+
+    <div class="room-layout">
+      <div class="media-section">
+        <div class="video-grid">
+          <MediaTile title="本地画面" subtitle="摄像头与麦克风" :empty="!localStream" empty-text="尚未开启本地设备">
+            <video ref="localVideoRef" autoplay muted playsinline />
+          </MediaTile>
+
+          <MediaTile title="桌面共享" subtitle="屏幕内容同步" :empty="!screenStream" empty-text="尚未开启桌面共享" icon="⌘">
+            <video ref="screenVideoRef" autoplay muted playsinline />
+          </MediaTile>
+
+          <MediaTile
+            v-for="stream in remoteStreams"
+            :key="stream.id"
+            :title="`远端成员 ${stream.id.slice(-4)}`"
+            subtitle="实时参会流"
+          >
+            <video
+              autoplay
+              playsinline
+              :ref="(el) => bindRemoteVideo(el as HTMLVideoElement | null, stream.mediaStream)"
+            />
+          </MediaTile>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <VotePanel :active-vote="activeVote" :results="voteResults" :submitted="submitted" @submit="handleVoteSubmit" />
+      </div>
+    </div>
+
+    <el-dialog v-model="showVoteDialog" title="发起表决" width="560px">
+      <el-form label-width="90px" class="dialog-form">
+        <el-form-item label="主题">
+          <el-input v-model="voteForm.topic" placeholder="请输入表决主题" />
+        </el-form-item>
+        <el-form-item label="选项">
+          <el-space direction="vertical" style="width: 100%">
+            <el-input v-for="(item, index) in voteForm.options" :key="index" v-model="item.content" />
+          </el-space>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showVoteDialog = false">取消</el-button>
+        <el-button type="primary" @click="startVote">发起</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
+
+import { createVote, fetchVotes, submitVote, type VoteItem } from '../../api/votes'
+import MediaTile from '../../components/media/MediaTile.vue'
+import VotePanel from '../../components/meeting/VotePanel.vue'
+import { useAuthStore } from '../../stores/auth'
+import { WsClient } from '../../utils/ws'
+
+interface RemoteStreamItem {
+  id: string
+  mediaStream: MediaStream
+}
+
+const route = useRoute()
+const authStore = useAuthStore()
+const meetingId = Number(route.params.id)
+const wsClient = new WsClient()
+const peerConnections = new Map<string, RTCPeerConnection>()
+const remoteStreams = ref<RemoteStreamItem[]>([])
+const localStream = ref<MediaStream | null>(null)
+const screenStream = ref<MediaStream | null>(null)
+const localVideoRef = ref<HTMLVideoElement | null>(null)
+const screenVideoRef = ref<HTMLVideoElement | null>(null)
+const showVoteDialog = ref(false)
+const submitted = ref(false)
+const votes = ref<VoteItem[]>([])
+const voteResults = ref<Array<{ id: number; content: string; count: number; ratio: number }>>([])
+const voteForm = reactive({
+  topic: '',
+  options: [{ content: '赞成' }, { content: '反对' }, { content: '弃权' }]
+})
+
+const canStartVote = computed(() => ['admin', 'host'].includes(authStore.role))
+const activeVote = computed(() => votes.value[0] || null)
+const selfId = `${authStore.user?.id || 'guest'}-${Math.random().toString(36).slice(2, 8)}`
+
+const createPeerConnection = (peerId: string) => {
+  if (peerConnections.has(peerId)) return peerConnections.get(peerId)!
+
+  const pc = new RTCPeerConnection({
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+  })
+
+  localStream.value?.getTracks().forEach((track) => localStream.value?.addTrack && pc.addTrack(track, localStream.value!))
+  screenStream.value?.getTracks().forEach((track) => screenStream.value?.addTrack && pc.addTrack(track, screenStream.value!))
+
+  pc.onicecandidate = (event) => {
+    if (event.candidate) {
+      wsClient.send({ type: 'ice-candidate', from: selfId, to: peerId, candidate: event.candidate })
+    }
+  }
+
+  pc.ontrack = (event) => {
+    const [stream] = event.streams
+    const exists = remoteStreams.value.find((item) => item.id === peerId)
+    if (!exists) {
+      remoteStreams.value.push({ id: peerId, mediaStream: stream })
+    }
+  }
+
+  peerConnections.set(peerId, pc)
+  return pc
+}
+
+const bindRemoteVideo = (el: HTMLVideoElement | null, stream: MediaStream) => {
+  if (el) el.srcObject = stream
+}
+
+const openCamera = async () => {
+  localStream.value = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  if (localVideoRef.value) {
+    localVideoRef.value.srcObject = localStream.value
+  }
+  ElMessage.success('已打开摄像头和麦克风')
+}
+
+const shareScreen = async () => {
+  screenStream.value = await navigator.mediaDevices.getDisplayMedia({ video: true })
+  if (screenVideoRef.value) {
+    screenVideoRef.value.srcObject = screenStream.value
+  }
+  ElMessage.success('已开启桌面共享')
+}
+
+const handleSignalMessage = async (raw: MessageEvent<string>) => {
+  const payload = JSON.parse(raw.data)
+  if (payload.from === selfId) return
+
+  if (payload.type === 'join') {
+    const pc = createPeerConnection(payload.from)
+    const offer = await pc.createOffer()
+    await pc.setLocalDescription(offer)
+    wsClient.send({ type: 'offer', from: selfId, to: payload.from, sdp: offer })
+  }
+
+  if (payload.to !== selfId) {
+    if (payload.type === 'vote-started') {
+      votes.value = [payload.vote, ...votes.value]
+      submitted.value = false
+    }
+    if (payload.type === 'vote-result') {
+      voteResults.value = payload.options
+    }
+    return
+  }
+
+  if (payload.type === 'offer') {
+    const pc = createPeerConnection(payload.from)
+    await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp))
+    const answer = await pc.createAnswer()
+    await pc.setLocalDescription(answer)
+    wsClient.send({ type: 'answer', from: selfId, to: payload.from, sdp: answer })
+  }
+
+  if (payload.type === 'answer') {
+    const pc = createPeerConnection(payload.from)
+    await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp))
+  }
+
+  if (payload.type === 'ice-candidate') {
+    const pc = createPeerConnection(payload.from)
+    await pc.addIceCandidate(new RTCIceCandidate(payload.candidate))
+  }
+}
+
+const connectRoom = () => {
+  wsClient.connect(`ws://127.0.0.1:8000/ws/meetings/${meetingId}`, handleSignalMessage)
+  setTimeout(() => wsClient.send({ type: 'join', from: selfId }), 300)
+}
+
+const loadVotes = async () => {
+  votes.value = await fetchVotes(meetingId)
+}
+
+const startVote = async () => {
+  const data = await createVote({
+    meeting_id: meetingId,
+    topic: voteForm.topic,
+    options: voteForm.options
+  })
+  votes.value = [data, ...votes.value]
+  showVoteDialog.value = false
+  voteForm.topic = ''
+  ElMessage.success('表决已发起')
+}
+
+const handleVoteSubmit = async (optionId: number) => {
+  if (!activeVote.value) return
+  const result = await submitVote(activeVote.value.id, optionId)
+  voteResults.value = result.options
+  submitted.value = true
+  ElMessage.success('投票成功')
+}
+
+onMounted(async () => {
+  await loadVotes()
+  connectRoom()
+})
+
+onBeforeUnmount(() => {
+  wsClient.close()
+  peerConnections.forEach((pc) => pc.close())
+})
+</script>
+
+<style scoped>
+.room-page {
+  display: grid;
+  gap: 24px;
+}
+.room-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+.room-eyebrow {
+  color: #6366f1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.room-head h1 {
+  margin: 10px 0 0;
+  font-size: 34px;
+  color: #0f172a;
+}
+.room-head p {
+  margin: 12px 0 0;
+  color: #64748b;
+  line-height: 1.7;
+  max-width: 720px;
+}
+.room-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.room-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.summary-item {
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+.summary-label {
+  color: #64748b;
+  font-size: 13px;
+}
+.summary-value {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.room-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+}
+.media-section,
+.side-section {
+  min-width: 0;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.dialog-form {
+  padding-top: 8px;
+}
+@media (max-width: 1200px) {
+  .room-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .room-summary,
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 720px) {
+  .room-head {
+    flex-direction: column;
+  }
+}
+</style>
