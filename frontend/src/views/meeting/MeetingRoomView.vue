@@ -356,7 +356,7 @@ onBeforeUnmount(() => {
   gap: 20px;
 }
 .room-eyebrow {
-  color: #6366f1;
+  color: var(--color-primary);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -367,18 +367,13 @@ onBeforeUnmount(() => {
   font-size: clamp(30px, 4vw, 36px);
   line-height: 1.03;
   letter-spacing: -0.03em;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .room-head p {
   margin: 12px 0 0;
-  color: #64748b;
+  color: var(--color-text-muted);
   line-height: 1.7;
   max-width: 720px;
-}
-.room-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
 }
 .room-summary {
   display: grid;
@@ -387,20 +382,21 @@ onBeforeUnmount(() => {
 }
 .summary-item {
   padding: 20px 22px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.68) 100%);
+  border: 1px solid rgba(46, 58, 89, 0.1);
+  box-shadow: 0 16px 36px rgba(26, 31, 59, 0.06);
+  backdrop-filter: blur(16px);
 }
 .summary-label {
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 13px;
 }
 .summary-value {
   margin-top: 10px;
   font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .room-layout {
   display: grid;
@@ -417,6 +413,21 @@ onBeforeUnmount(() => {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
+.media-tile-main {
+  min-height: 420px;
+}
+.floating-toolbar {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(247, 249, 252, 0.9) 100%);
+  border: 1px solid rgba(46, 58, 89, 0.1);
+  box-shadow: 0 20px 40px rgba(26, 31, 59, 0.08);
+  backdrop-filter: blur(18px);
+}
 .dialog-form {
   padding-top: 8px;
 }
@@ -429,6 +440,10 @@ onBeforeUnmount(() => {
   .room-summary,
   .video-grid {
     grid-template-columns: 1fr;
+  }
+
+  .media-tile-main {
+    min-height: 340px;
   }
 }
 @media (max-width: 720px) {
