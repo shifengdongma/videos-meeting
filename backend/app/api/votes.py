@@ -36,25 +36,39 @@ def build_vote_result(vote: Vote) -> dict:
     }
 
 
+def build_vote_response(vote: Vote, user_id: int | None = None) -> dict:
+    result = build_vote_result(vote)
+    submitted = any(record.user_id == user_id for record in vote.records) if user_id is not None else False
+    return {
+        "id": vote.id,
+        "meeting_id": vote.meeting_id,
+        "topic": vote.topic,
+        "options": [{"id": option.id, "content": option.content} for option in vote.options],
+        "submitted": submitted,
+        "results": result["options"],
+    }
+
+
 @router.get("/meeting/{meeting_id}", response_model=list[VoteResponse])
 def list_votes(
     meeting_id: int,
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return (
+    votes = (
         db.query(Vote)
-        .options(joinedload(Vote.options))
+        .options(joinedload(Vote.options), joinedload(Vote.records))
         .filter(Vote.meeting_id == meeting_id)
         .order_by(Vote.id.desc())
         .all()
     )
+    return [build_vote_response(vote, current_user.id) for vote in votes]
 
 
 @router.post("", response_model=VoteResponse, status_code=status.HTTP_201_CREATED)
 async def create_vote(
     payload: VoteCreate,
-    _: User = Depends(require_roles(RoleEnum.admin, RoleEnum.host)),
+    current_user: User = Depends(require_roles(RoleEnum.admin, RoleEnum.host)),
     db: Session = Depends(get_db),
 ):
     meeting = db.query(Meeting).filter(Meeting.id == payload.meeting_id).first()
@@ -73,9 +87,9 @@ async def create_vote(
     vote = db.query(Vote).options(joinedload(Vote.options), joinedload(Vote.records)).filter(Vote.id == vote.id).first()
     await manager.broadcast_meeting(payload.meeting_id, {
         "type": "vote-started",
-        "vote": VoteResponse.model_validate(vote).model_dump(),
+        "vote": build_vote_response(vote, current_user.id),
     })
-    return vote
+    return build_vote_response(vote, current_user.id)
 
 
 @router.post("/{vote_id}/submit")
