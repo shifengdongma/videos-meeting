@@ -164,6 +164,11 @@ const resetVoteState = () => {
   voteResults.value = []
 }
 
+const syncVoteState = (vote: VoteItem | null) => {
+  submitted.value = !!vote?.submitted
+  voteResults.value = vote?.results ?? []
+}
+
 const upsertVote = (vote: VoteItem) => {
   votes.value = [vote, ...votes.value.filter((item) => item.id !== vote.id)]
 }
