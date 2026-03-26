@@ -302,6 +302,10 @@ const loadVotes = async () => {
   votes.value = await fetchVotes(meetingId)
 }
 
+watch(activeVote, (vote) => {
+  syncVoteState(vote)
+}, { immediate: true })
+
 const startVote = async () => {
   await createVote({
     meeting_id: meetingId,
