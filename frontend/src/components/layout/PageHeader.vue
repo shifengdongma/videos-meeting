@@ -26,13 +26,13 @@ defineProps<{
   align-items: flex-end;
   gap: 24px;
   margin-bottom: 6px;
-  padding: 8px 2px 0;
+  padding: 10px 4px 0;
 }
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--color-primary-hover);
+  color: var(--color-primary);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -43,7 +43,7 @@ defineProps<{
   content: '';
   width: 32px;
   height: 1px;
-  background: linear-gradient(90deg, rgba(37, 99, 235, 0.95), rgba(125, 211, 252, 0.36));
+  background: linear-gradient(90deg, rgba(46, 58, 89, 0.95), rgba(30, 158, 111, 0.36));
 }
 .title {
   margin: 0;
