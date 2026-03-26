@@ -81,30 +81,7 @@ onMounted(loadUsers)
 </script>
 
 <style scoped>
-.user-page {
-  display: grid;
-  gap: 24px;
-}
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-.table-card {
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 24px;
-}
 .role-select {
   width: 180px;
-}
-@media (max-width: 1100px) {
-  .summary-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 720px) {
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
 }
 </style>
