@@ -267,7 +267,6 @@ const handleSignalMessage = async (raw: MessageEvent<string>) => {
   if (payload.to !== selfId) {
     if (payload.type === 'vote-started') {
       upsertVote(payload.vote)
-      resetVoteState()
     }
     if (payload.type === 'vote-result' && activeVote.value?.id === payload.voteId) {
       voteResults.value = payload.options
