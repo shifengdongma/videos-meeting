@@ -99,16 +99,17 @@ const logout = () => {
   display: grid;
   grid-template-columns: var(--app-shell-sidebar-width) minmax(0, 1fr);
   background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.14), transparent 24%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    radial-gradient(circle at top left, rgba(46, 58, 89, 0.12), transparent 24%),
+    linear-gradient(180deg, #f9fbfc 0%, #eef2f5 100%);
 }
 .sidebar {
   display: flex;
   flex-direction: column;
   padding: 30px 20px 22px;
-  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  background: var(--color-sidebar);
   color: #fff;
-  border-right: 1px solid rgba(148, 163, 184, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
 }
 .brand-block {
   display: flex;
@@ -123,11 +124,12 @@ const logout = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  box-shadow: 0 18px 36px rgba(79, 70, 229, 0.24);
+  box-shadow: 0 18px 36px rgba(10, 14, 30, 0.24);
+  backdrop-filter: blur(12px);
 }
 .brand-title {
   font-size: 16px;
@@ -144,28 +146,30 @@ const logout = () => {
   background: transparent;
 }
 :deep(.nav-menu .el-menu-item) {
-  height: 50px;
+  height: 52px;
   margin-bottom: 8px;
   border-radius: 16px;
   color: rgba(255, 255, 255, 0.74);
   font-weight: 600;
+  transition: background-color var(--motion-fast) ease, transform var(--motion-fast) ease, color var(--motion-fast) ease;
 }
 :deep(.nav-menu .el-menu-item:hover) {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
+  transform: translateX(2px);
 }
 :deep(.nav-menu .el-menu-item.is-active) {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.28), rgba(56, 189, 248, 0.18));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
   color: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 .sidebar-footer {
   margin-top: 20px;
   padding: 18px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
 }
 .footer-label {
   color: rgba(255, 255, 255, 0.58);
@@ -189,7 +193,7 @@ const logout = () => {
   padding: var(--app-shell-topbar-padding-top) var(--app-shell-gutter) var(--app-shell-topbar-padding-bottom);
 }
 .topbar-label {
-  color: #6366f1;
+  color: var(--color-primary);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -201,7 +205,7 @@ const logout = () => {
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .topbar-actions {
   display: flex;
@@ -212,18 +216,18 @@ const logout = () => {
   padding: 10px 14px;
   border-radius: 18px;
   background: var(--app-surface-glass);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(46, 58, 89, 0.12);
+  box-shadow: 0 10px 30px rgba(26, 31, 59, 0.08);
+  backdrop-filter: blur(14px);
 }
 .user-name {
   font-size: 14px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .user-role {
   margin-top: 4px;
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 12px;
 }
 .logout-btn {
