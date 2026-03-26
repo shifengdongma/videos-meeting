@@ -178,14 +178,25 @@ a {
   border-radius: var(--app-radius-sm);
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.2) inset;
+  transition:
+    box-shadow var(--motion-base) ease,
+    border-color var(--motion-base) ease,
+    transform var(--motion-fast) ease;
+}
+
+.el-input__wrapper:hover,
+.el-select__wrapper:hover,
+.el-textarea__inner:hover {
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.28) inset;
 }
 
 .el-input__wrapper.is-focus,
 .el-select__wrapper.is-focused,
 .el-textarea__inner:focus {
   box-shadow:
-    0 0 0 1px rgba(99, 102, 241, 0.45) inset,
-    0 0 0 4px rgba(99, 102, 241, 0.08);
+    0 0 0 1px rgba(59, 130, 246, 0.54) inset,
+    0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 16px 30px rgba(59, 130, 246, 0.08);
 }
 
 .el-dialog {
