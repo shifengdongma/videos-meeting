@@ -11,10 +11,10 @@
     </PageHeader>
 
     <div class="summary-grid app-summary-grid" data-columns="4">
-      <SummaryCard label="全部会议" :value="meetings.length" description="当前系统内可访问的会议总数" />
-      <SummaryCard label="进行中" :value="ongoingCount" hint="实时进行" description="正在使用会议室的场次" />
-      <SummaryCard label="待开始" :value="scheduledCount" description="已排期、等待进入的会议" />
-      <SummaryCard label="已结束" :value="endedCount" description="已完成的历史会议" />
+      <SummaryCard label="全部会议" :value="meetings.length" description="当前系统内可访问的会议总数" tone="primary" />
+      <SummaryCard label="进行中" :value="ongoingCount" hint="实时进行" description="正在使用会议室的场次" tone="warning" />
+      <SummaryCard label="待开始" :value="scheduledCount" description="已排期、等待进入的会议" tone="success" />
+      <SummaryCard label="已结束" :value="endedCount" description="已完成的历史会议" tone="danger" />
     </div>
 
     <el-card class="table-card app-table-card" shadow="never">
