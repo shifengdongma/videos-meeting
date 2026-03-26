@@ -1,5 +1,5 @@
 <template>
-  <div class="live-page">
+  <div class="live-page app-page">
     <PageHeader
       eyebrow="Live center"
       title="直播中心"
