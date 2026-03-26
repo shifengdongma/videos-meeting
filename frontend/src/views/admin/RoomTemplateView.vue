@@ -1,5 +1,5 @@
 <template>
-  <div class="template-page">
+  <div class="template-page app-page">
     <PageHeader
       eyebrow="Room templates"
       title="会议室模板"
