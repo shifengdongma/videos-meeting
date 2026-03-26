@@ -121,6 +121,62 @@ const canStartVote = computed(() => ['admin', 'host'].includes(authStore.role))
 const activeVote = computed(() => votes.value[0] || null)
 const selfId = `${authStore.user?.id || 'guest'}-${Math.random().toString(36).slice(2, 8)}`
 
+const setVideoStream = (el: HTMLVideoElement | null, stream: MediaStream | null) => {
+  if (el) el.srcObject = stream
+}
+
+const syncStreamToPeers = (stream: MediaStream, kind: 'camera' | 'screen') => {
+  peerConnections.forEach((pc) => {
+    const senders = pc.getSenders().filter((sender) => sender.track?.kind === 'video' || sender.track?.kind === 'audio')
+    const streamTracks = stream.getTracks()
+
+    streamTracks.forEach((track) => {
+      const exists = senders.some((sender) => sender.track?.id === track.id)
+      if (!exists) {
+        pc.addTrack(track, stream)
+      }
+    })
+
+    if (kind === 'screen') {
+      senders
+        .filter((sender) => sender.track?.kind === 'video' && !streamTracks.some((track) => track.id === sender.track?.id))
+        .forEach((sender) => pc.removeTrack(sender))
+    }
+  })
+}
+
+const removeStreamFromPeers = (stream: MediaStream | null) => {
+  if (!stream) return
+  const trackIds = new Set(stream.getTracks().map((track) => track.id))
+  peerConnections.forEach((pc) => {
+    pc.getSenders()
+      .filter((sender) => sender.track && trackIds.has(sender.track.id))
+      .forEach((sender) => pc.removeTrack(sender))
+  })
+}
+
+const cleanupStream = (
+  streamRef: typeof localStream | typeof screenStream,
+  videoRef: typeof localVideoRef | typeof screenVideoRef
+) => {
+  removeStreamFromPeers(streamRef.value)
+  streamRef.value?.getTracks().forEach((track) => {
+    track.onended = null
+    track.stop()
+  })
+  streamRef.value = null
+  setVideoStream(videoRef.value, null)
+}
+
+const resetVoteState = () => {
+  submitted.value = false
+  voteResults.value = []
+}
+
+const upsertVote = (vote: VoteItem) => {
+  votes.value = [vote, ...votes.value.filter((item) => item.id !== vote.id)]
+}
+
 const createPeerConnection = (peerId: string) => {
   if (peerConnections.has(peerId)) return peerConnections.get(peerId)!
 
