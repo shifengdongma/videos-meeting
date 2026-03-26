@@ -5,11 +5,20 @@ export interface VoteOption {
   content: string
 }
 
+export interface VoteResultOption {
+  id: number
+  content: string
+  count: number
+  ratio: number
+}
+
 export interface VoteItem {
   id: number
   meeting_id: number
   topic: string
   options: VoteOption[]
+  submitted: boolean
+  results: VoteResultOption[]
 }
 
 export const fetchVotes = async (meetingId: number) => {
@@ -23,6 +32,6 @@ export const createVote = async (payload: { meeting_id: number; topic: string; o
 }
 
 export const submitVote = async (voteId: number, option_id: number) => {
-  const { data } = await api.post(`/votes/${voteId}/submit`, { option_id })
+  const { data } = await api.post<{ options: VoteResultOption[] }>(`/votes/${voteId}/submit`, { option_id })
   return data
 }
