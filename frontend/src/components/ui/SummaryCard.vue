@@ -20,23 +20,24 @@ defineProps<{
 
 <style scoped>
 .summary-card {
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 100%);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.88) 100%);
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--motion-fast) ease, box-shadow var(--motion-base) ease, border-color var(--motion-fast) ease;
 }
 .summary-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(99, 102, 241, 0.18);
-  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.1);
+  border-color: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.1), 0 10px 24px rgba(59, 130, 246, 0.08);
 }
 .label {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 .value-row {
   display: flex;
@@ -45,11 +46,11 @@ defineProps<{
   gap: 16px;
 }
 .value {
-  font-size: clamp(30px, 3vw, 38px);
-  line-height: 1;
+  font-size: clamp(34px, 3vw, 42px);
+  line-height: 0.95;
   font-weight: 800;
-  letter-spacing: -0.04em;
-  color: #0f172a;
+  letter-spacing: -0.05em;
+  color: var(--color-text-primary);
 }
 .hint {
   display: inline-flex;
@@ -57,14 +58,15 @@ defineProps<{
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.14);
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
 }
 .description {
-  margin-top: 16px;
+  margin-top: 18px;
   color: #94a3b8;
   font-size: 13px;
   line-height: 1.7;
