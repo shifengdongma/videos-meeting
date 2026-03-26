@@ -11,9 +11,9 @@
     </PageHeader>
 
     <div class="summary-grid app-summary-grid" data-columns="3">
-      <SummaryCard label="全部直播" :value="streams.length" description="当前可访问的直播场次" />
-      <SummaryCard label="可立即进入" :value="streams.length" hint="在线可用" description="已创建完成，可直接进入直播间" />
-      <SummaryCard label="主播权限" :value="canCreate ? '已开启' : '未开启'" description="当前账号是否可发起直播" />
+      <SummaryCard label="全部直播" :value="streams.length" description="当前可访问的直播场次" tone="primary" />
+      <SummaryCard label="可立即进入" :value="streams.length" hint="在线可用" description="已创建完成，可直接进入直播间" tone="warning" />
+      <SummaryCard label="主播权限" :value="canCreate ? '已开启' : '未开启'" description="当前账号是否可发起直播" tone="success" />
     </div>
 
     <el-card class="table-card app-table-card" shadow="never">
