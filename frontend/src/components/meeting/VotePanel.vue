@@ -69,9 +69,9 @@ const emit = defineEmits<{
 
 <style scoped>
 .vote-panel {
-  border-radius: 24px;
-  padding: 22px;
-  background: rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(148, 163, 184, 0.18);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
@@ -109,7 +109,7 @@ const emit = defineEmits<{
   margin-top: 20px;
 }
 .topic-card {
-  padding: 16px;
+  padding: 18px;
   border-radius: 18px;
   background: #f8fafc;
   border: 1px solid rgba(148, 163, 184, 0.14);
@@ -131,7 +131,7 @@ const emit = defineEmits<{
 }
 .vote-option {
   justify-content: flex-start;
-  height: 44px;
+  min-height: 46px;
   border-radius: 14px;
   font-weight: 600;
 }
