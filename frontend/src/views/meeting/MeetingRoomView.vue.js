@@ -27,14 +27,54 @@ const voteForm = reactive({
 const canStartVote = computed(() => ['admin', 'host'].includes(authStore.role));
 const activeVote = computed(() => votes.value[0] || null);
 const selfId = `${authStore.user?.id || 'guest'}-${Math.random().toString(36).slice(2, 8)}`;
+const setVideoStream = (el, stream) => {
+    if (el)
+        el.srcObject = stream;
+};
+const addStreamToPeers = (stream) => {
+    peerConnections.forEach((pc) => {
+        const senderTrackIds = new Set(pc.getSenders().map((sender) => sender.track?.id).filter(Boolean));
+        stream.getTracks().forEach((track) => {
+            if (!senderTrackIds.has(track.id)) {
+                pc.addTrack(track, stream);
+            }
+        });
+    });
+};
+const removeStreamFromPeers = (stream) => {
+    if (!stream)
+        return;
+    const trackIds = new Set(stream.getTracks().map((track) => track.id));
+    peerConnections.forEach((pc) => {
+        pc.getSenders()
+            .filter((sender) => sender.track && trackIds.has(sender.track.id))
+            .forEach((sender) => pc.removeTrack(sender));
+    });
+};
+const cleanupStream = (streamRef, videoRef) => {
+    removeStreamFromPeers(streamRef.value);
+    streamRef.value?.getTracks().forEach((track) => {
+        track.onended = null;
+        track.stop();
+    });
+    streamRef.value = null;
+    setVideoStream(videoRef.value, null);
+};
+const resetVoteState = () => {
+    submitted.value = false;
+    voteResults.value = [];
+};
+const upsertVote = (vote) => {
+    votes.value = [vote, ...votes.value.filter((item) => item.id !== vote.id)];
+};
 const createPeerConnection = (peerId) => {
     if (peerConnections.has(peerId))
         return peerConnections.get(peerId);
     const pc = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     });
-    localStream.value?.getTracks().forEach((track) => localStream.value?.addTrack && pc.addTrack(track, localStream.value));
-    screenStream.value?.getTracks().forEach((track) => screenStream.value?.addTrack && pc.addTrack(track, screenStream.value));
+    localStream.value?.getTracks().forEach((track) => pc.addTrack(track, localStream.value));
+    screenStream.value?.getTracks().forEach((track) => pc.addTrack(track, screenStream.value));
     pc.onicecandidate = (event) => {
         if (event.candidate) {
             wsClient.send({ type: 'ice-candidate', from: selfId, to: peerId, candidate: event.candidate });
@@ -51,22 +91,51 @@ const createPeerConnection = (peerId) => {
     return pc;
 };
 const bindRemoteVideo = (el, stream) => {
-    if (el)
-        el.srcObject = stream;
+    setVideoStream(el, stream);
+};
+const stopCamera = () => {
+    cleanupStream(localStream, localVideoRef);
+};
+const stopScreenShare = () => {
+    cleanupStream(screenStream, screenVideoRef);
 };
 const openCamera = async () => {
+    if (localStream.value)
+        return;
     localStream.value = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    if (localVideoRef.value) {
-        localVideoRef.value.srcObject = localStream.value;
-    }
+    setVideoStream(localVideoRef.value, localStream.value);
+    addStreamToPeers(localStream.value);
     ElMessage.success('已打开摄像头和麦克风');
 };
 const shareScreen = async () => {
+    if (screenStream.value)
+        return;
     screenStream.value = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    if (screenVideoRef.value) {
-        screenVideoRef.value.srcObject = screenStream.value;
+    const [screenTrack] = screenStream.value.getVideoTracks();
+    if (screenTrack) {
+        screenTrack.onended = () => {
+            stopScreenShare();
+        };
     }
+    setVideoStream(screenVideoRef.value, screenStream.value);
+    addStreamToPeers(screenStream.value);
     ElMessage.success('已开启桌面共享');
+};
+const toggleCamera = async () => {
+    if (localStream.value) {
+        stopCamera();
+        ElMessage.success('已关闭摄像头和麦克风');
+        return;
+    }
+    await openCamera();
+};
+const toggleScreenShare = async () => {
+    if (screenStream.value) {
+        stopScreenShare();
+        ElMessage.success('已停止桌面共享');
+        return;
+    }
+    await shareScreen();
 };
 const handleSignalMessage = async (raw) => {
     const payload = JSON.parse(raw.data);
@@ -80,10 +149,10 @@ const handleSignalMessage = async (raw) => {
     }
     if (payload.to !== selfId) {
         if (payload.type === 'vote-started') {
-            votes.value = [payload.vote, ...votes.value];
-            submitted.value = false;
+            upsertVote(payload.vote);
+            resetVoteState();
         }
-        if (payload.type === 'vote-result') {
+        if (payload.type === 'vote-result' && activeVote.value?.id === payload.voteId) {
             voteResults.value = payload.options;
         }
         return;
@@ -112,22 +181,25 @@ const loadVotes = async () => {
     votes.value = await fetchVotes(meetingId);
 };
 const startVote = async () => {
-    const data = await createVote({
+    await createVote({
         meeting_id: meetingId,
         topic: voteForm.topic,
         options: voteForm.options
     });
-    votes.value = [data, ...votes.value];
     showVoteDialog.value = false;
     voteForm.topic = '';
+    resetVoteState();
     ElMessage.success('表决已发起');
 };
 const handleVoteSubmit = async (optionId) => {
     if (!activeVote.value)
         return;
-    const result = await submitVote(activeVote.value.id, optionId);
-    voteResults.value = result.options;
-    submitted.value = true;
+    const voteId = activeVote.value.id;
+    const result = await submitVote(voteId, optionId);
+    if (activeVote.value?.id === voteId) {
+        voteResults.value = result.options;
+        submitted.value = true;
+    }
     ElMessage.success('投票成功');
 };
 onMounted(async () => {
@@ -135,6 +207,8 @@ onMounted(async () => {
     connectRoom();
 });
 onBeforeUnmount(() => {
+    stopCamera();
+    stopScreenShare();
     wsClient.close();
     peerConnections.forEach((pc) => pc.close());
 });
@@ -151,7 +225,7 @@ let __VLS_directives;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "room-page" },
+    ...{ class: "room-page app-page" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "room-head" },
@@ -181,9 +255,10 @@ let __VLS_4;
 let __VLS_5;
 let __VLS_6;
 const __VLS_7 = {
-    onClick: (__VLS_ctx.openCamera)
+    onClick: (__VLS_ctx.toggleCamera)
 };
 __VLS_3.slots.default;
+(__VLS_ctx.localStream ? '关闭摄像头/麦克风' : '打开摄像头/麦克风');
 var __VLS_3;
 const __VLS_8 = {}.ElButton;
 /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
@@ -198,9 +273,10 @@ let __VLS_12;
 let __VLS_13;
 let __VLS_14;
 const __VLS_15 = {
-    onClick: (__VLS_ctx.shareScreen)
+    onClick: (__VLS_ctx.toggleScreenShare)
 };
 __VLS_11.slots.default;
+(__VLS_ctx.screenStream ? '停止桌面共享' : '桌面共享');
 var __VLS_11;
 if (__VLS_ctx.canStartVote) {
     const __VLS_16 = {}.ElButton;
@@ -489,6 +565,7 @@ var __VLS_47;
 }
 var __VLS_43;
 /** @type {__VLS_StyleScopedClasses['room-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['room-head']} */ ;
 /** @type {__VLS_StyleScopedClasses['room-eyebrow']} */ ;
 /** @type {__VLS_StyleScopedClasses['room-actions']} */ ;
@@ -526,8 +603,8 @@ const __VLS_self = (await import('vue')).defineComponent({
             canStartVote: canStartVote,
             activeVote: activeVote,
             bindRemoteVideo: bindRemoteVideo,
-            openCamera: openCamera,
-            shareScreen: shareScreen,
+            toggleCamera: toggleCamera,
+            toggleScreenShare: toggleScreenShare,
             startVote: startVote,
             handleVoteSubmit: handleVoteSubmit,
         };

@@ -52,12 +52,10 @@ debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "meeting-page" },
+    ...{ class: "meeting-page app-page" },
 });
 /** @type {[typeof PageHeader, typeof PageHeader, ]} */ ;
 // @ts-ignore
@@ -104,7 +102,8 @@ __VLS_2.slots.default;
 }
 var __VLS_2;
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "summary-grid" },
+    ...{ class: "summary-grid app-summary-grid" },
+    'data-columns': "4",
 });
 /** @type {[typeof SummaryCard, ]} */ ;
 // @ts-ignore
@@ -160,11 +159,11 @@ const __VLS_23 = {}.ElCard;
 /** @type {[typeof __VLS_components.ElCard, typeof __VLS_components.elCard, typeof __VLS_components.ElCard, typeof __VLS_components.elCard, ]} */ ;
 // @ts-ignore
 const __VLS_24 = __VLS_asFunctionalComponent(__VLS_23, new __VLS_23({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }));
 const __VLS_25 = __VLS_24({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }, ...__VLS_functionalComponentArgsRest(__VLS_24));
 __VLS_26.slots.default;
@@ -475,8 +474,11 @@ var __VLS_80;
 }
 var __VLS_76;
 /** @type {__VLS_StyleScopedClasses['meeting-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-summary-grid']} */ ;
 /** @type {__VLS_StyleScopedClasses['table-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-table-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['dialog-form']} */ ;
 /** @type {__VLS_StyleScopedClasses['time-picker']} */ ;
 /** @type {__VLS_StyleScopedClasses['time-picker']} */ ;

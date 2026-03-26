@@ -13,6 +13,10 @@ debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
+/** @type {__VLS_StyleScopedClasses['status-tag']} */ ;
+/** @type {__VLS_StyleScopedClasses['status-tag']} */ ;
+/** @type {__VLS_StyleScopedClasses['status-tag']} */ ;
+/** @type {__VLS_StyleScopedClasses['status-tag']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 const __VLS_0 = {}.ElTag;

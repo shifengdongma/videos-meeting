@@ -94,17 +94,15 @@ async def submit_vote(
     if not vote:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="投票不存在")
 
-    exists = db.query(VoteRecord).filter(VoteRecord.vote_id == vote_id, VoteRecord.user_id == current_user.id).first()
-    if exists:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="你已投票")
-
     option = db.query(VoteOption).filter(VoteOption.id == payload.option_id, VoteOption.vote_id == vote_id).first()
     if not option:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="选项不存在")
 
-    record = VoteRecord(vote_id=vote_id, user_id=current_user.id, option_id=payload.option_id)
-    db.add(record)
-    db.commit()
+    exists = db.query(VoteRecord).filter(VoteRecord.vote_id == vote_id, VoteRecord.user_id == current_user.id).first()
+    if not exists:
+        record = VoteRecord(vote_id=vote_id, user_id=current_user.id, option_id=payload.option_id)
+        db.add(record)
+        db.commit()
 
     vote = (
         db.query(Vote)

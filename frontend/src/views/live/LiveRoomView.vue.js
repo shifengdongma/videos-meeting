@@ -92,7 +92,7 @@ let __VLS_directives;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "live-room-page" },
+    ...{ class: "live-room-page app-page" },
 });
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
     ...{ class: "live-head" },
@@ -209,6 +209,7 @@ for (const [stream] of __VLS_getVForSourceType((__VLS_ctx.remoteStreams))) {
     var __VLS_13;
 }
 /** @type {__VLS_StyleScopedClasses['live-room-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['live-head']} */ ;
 /** @type {__VLS_StyleScopedClasses['live-eyebrow']} */ ;
 /** @type {__VLS_StyleScopedClasses['live-actions']} */ ;

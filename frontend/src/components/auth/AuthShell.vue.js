@@ -7,6 +7,7 @@ let __VLS_directives;
 /** @type {__VLS_StyleScopedClasses['auth-shell']} */ ;
 /** @type {__VLS_StyleScopedClasses['brand-panel']} */ ;
 /** @type {__VLS_StyleScopedClasses['brand-panel']} */ ;
+/** @type {__VLS_StyleScopedClasses['brand-panel']} */ ;
 /** @type {__VLS_StyleScopedClasses['form-panel']} */ ;
 // CSS variable injection 
 // CSS variable injection end 

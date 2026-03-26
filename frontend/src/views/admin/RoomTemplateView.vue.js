@@ -5,11 +5,10 @@ debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "template-page" },
+    ...{ class: "template-page app-page" },
 });
 /** @type {[typeof PageHeader, ]} */ ;
 // @ts-ignore
@@ -24,7 +23,8 @@ const __VLS_1 = __VLS_0({
     description: "预留不同会议模板与场景配置入口，便于后续扩展专项会议室能力。",
 }, ...__VLS_functionalComponentArgsRest(__VLS_0));
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "summary-grid" },
+    ...{ class: "summary-grid app-summary-grid" },
+    'data-columns': "2",
 });
 /** @type {[typeof SummaryCard, ]} */ ;
 // @ts-ignore
@@ -54,11 +54,11 @@ const __VLS_9 = {}.ElCard;
 /** @type {[typeof __VLS_components.ElCard, typeof __VLS_components.elCard, typeof __VLS_components.ElCard, typeof __VLS_components.elCard, ]} */ ;
 // @ts-ignore
 const __VLS_10 = __VLS_asFunctionalComponent(__VLS_9, new __VLS_9({
-    ...{ class: "content-card" },
+    ...{ class: "content-card app-surface-card app-panel-muted" },
     shadow: "never",
 }));
 const __VLS_11 = __VLS_10({
-    ...{ class: "content-card" },
+    ...{ class: "content-card app-surface-card app-panel-muted" },
     shadow: "never",
 }, ...__VLS_functionalComponentArgsRest(__VLS_10));
 __VLS_12.slots.default;
@@ -72,8 +72,12 @@ const __VLS_14 = __VLS_13({
 }, ...__VLS_functionalComponentArgsRest(__VLS_13));
 var __VLS_12;
 /** @type {__VLS_StyleScopedClasses['template-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-summary-grid']} */ ;
 /** @type {__VLS_StyleScopedClasses['content-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-surface-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-panel-muted']} */ ;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {

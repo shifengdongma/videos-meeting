@@ -35,11 +35,10 @@ debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "live-page" },
+    ...{ class: "live-page app-page" },
 });
 /** @type {[typeof PageHeader, typeof PageHeader, ]} */ ;
 // @ts-ignore
@@ -82,7 +81,8 @@ __VLS_2.slots.default;
 }
 var __VLS_2;
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "summary-grid" },
+    ...{ class: "summary-grid app-summary-grid" },
+    'data-columns': "3",
 });
 /** @type {[typeof SummaryCard, ]} */ ;
 // @ts-ignore
@@ -126,11 +126,11 @@ const __VLS_20 = {}.ElCard;
 /** @type {[typeof __VLS_components.ElCard, typeof __VLS_components.elCard, typeof __VLS_components.ElCard, typeof __VLS_components.elCard, ]} */ ;
 // @ts-ignore
 const __VLS_21 = __VLS_asFunctionalComponent(__VLS_20, new __VLS_20({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }));
 const __VLS_22 = __VLS_21({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }, ...__VLS_functionalComponentArgsRest(__VLS_21));
 __VLS_23.slots.default;
@@ -291,8 +291,11 @@ if (!__VLS_ctx.loading && !__VLS_ctx.streams.length) {
 }
 var __VLS_23;
 /** @type {__VLS_StyleScopedClasses['live-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-summary-grid']} */ ;
 /** @type {__VLS_StyleScopedClasses['table-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-table-card']} */ ;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {

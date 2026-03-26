@@ -36,12 +36,10 @@ debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
-/** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
 // CSS variable injection 
 // CSS variable injection end 
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "user-page" },
+    ...{ class: "user-page app-page" },
 });
 /** @type {[typeof PageHeader, ]} */ ;
 // @ts-ignore
@@ -56,7 +54,8 @@ const __VLS_1 = __VLS_0({
     description: "集中维护账号角色与权限分配，帮助管理员快速识别当前系统中的角色结构。",
 }, ...__VLS_functionalComponentArgsRest(__VLS_0));
 __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-    ...{ class: "summary-grid" },
+    ...{ class: "summary-grid app-summary-grid" },
+    'data-columns': "4",
 });
 /** @type {[typeof SummaryCard, ]} */ ;
 // @ts-ignore
@@ -112,11 +111,11 @@ const __VLS_15 = {}.ElCard;
 /** @type {[typeof __VLS_components.ElCard, typeof __VLS_components.elCard, typeof __VLS_components.ElCard, typeof __VLS_components.elCard, ]} */ ;
 // @ts-ignore
 const __VLS_16 = __VLS_asFunctionalComponent(__VLS_15, new __VLS_15({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }));
 const __VLS_17 = __VLS_16({
-    ...{ class: "table-card" },
+    ...{ class: "table-card app-table-card" },
     shadow: "never",
 }, ...__VLS_functionalComponentArgsRest(__VLS_16));
 __VLS_18.slots.default;
@@ -268,8 +267,11 @@ if (!__VLS_ctx.loading && !__VLS_ctx.users.length) {
 }
 var __VLS_18;
 /** @type {__VLS_StyleScopedClasses['user-page']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-page']} */ ;
 /** @type {__VLS_StyleScopedClasses['summary-grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-summary-grid']} */ ;
 /** @type {__VLS_StyleScopedClasses['table-card']} */ ;
+/** @type {__VLS_StyleScopedClasses['app-table-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['role-select']} */ ;
 var __VLS_dollars;
 const __VLS_self = (await import('vue')).defineComponent({
