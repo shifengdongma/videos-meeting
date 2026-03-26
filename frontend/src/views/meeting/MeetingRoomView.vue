@@ -1,5 +1,5 @@
 <template>
-  <div class="room-page">
+  <div class="room-page app-page">
     <div class="room-head">
       <div>
         <div class="room-eyebrow">Meeting console</div>
