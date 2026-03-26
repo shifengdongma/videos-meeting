@@ -1,7 +1,24 @@
 :root {
   color: #0f172a;
-  background: #f8fafc;
+  background: #f4f7fb;
   font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color-scheme: light;
+  --app-text-primary: #0f172a;
+  --app-text-secondary: #475569;
+  --app-text-muted: #64748b;
+  --app-border-soft: rgba(148, 163, 184, 0.18);
+  --app-border-strong: rgba(148, 163, 184, 0.28);
+  --app-surface: rgba(255, 255, 255, 0.88);
+  --app-surface-strong: rgba(255, 255, 255, 0.96);
+  --app-surface-muted: rgba(248, 250, 252, 0.92);
+  --app-shadow-soft: 0 20px 45px rgba(15, 23, 42, 0.08);
+  --app-shadow-hover: 0 24px 60px rgba(15, 23, 42, 0.12);
+  --app-radius-lg: 28px;
+  --app-radius-md: 20px;
+  --app-radius-sm: 14px;
+  --app-accent: #4f46e5;
+  --app-accent-soft: rgba(79, 70, 229, 0.12);
+  --app-success: #059669;
 }
 
 * {
@@ -14,12 +31,15 @@ body,
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.08), transparent 22%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.14), transparent 22%),
+    radial-gradient(circle at right 20%, rgba(56, 189, 248, 0.1), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef2ff 52%, #f8fafc 100%);
 }
 
 body {
-  color: #0f172a;
+  color: var(--app-text-primary);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -29,15 +49,20 @@ select {
   font: inherit;
 }
 
+a {
+  color: inherit;
+}
+
 .el-card {
-  border-radius: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  border-radius: var(--app-radius-lg);
+  border: 1px solid var(--app-border-soft);
+  background: var(--app-surface-strong);
+  box-shadow: var(--app-shadow-soft);
 }
 
 .el-card__header {
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
 }
 
 .el-card__body {
@@ -45,13 +70,33 @@ select {
 }
 
 .el-button {
-  border-radius: 14px;
-  font-weight: 600;
+  border-radius: var(--app-radius-sm);
+  font-weight: 700;
+  min-height: 40px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.el-button:hover {
+  transform: translateY(-1px);
+}
+
+.el-button--primary {
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+}
+
+.el-button--default {
+  border-color: rgba(148, 163, 184, 0.24);
+  background: rgba(255, 255, 255, 0.84);
 }
 
 .el-button--large {
-  min-height: 44px;
-  padding-inline: 20px;
+  min-height: 46px;
+  padding-inline: 22px;
 }
 
 .el-button + .el-button {
@@ -62,17 +107,34 @@ select {
 .el-textarea__inner,
 .el-select__wrapper,
 .el-date-editor.el-input__wrapper {
-  border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.18) inset;
+  border-radius: var(--app-radius-sm);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.2) inset;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.45) inset,
+    0 0 0 4px rgba(99, 102, 241, 0.08);
 }
 
 .el-dialog {
-  border-radius: 24px;
+  border-radius: var(--app-radius-lg);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
 }
 
 .el-dialog__header {
   margin-right: 0;
-  padding: 22px 24px 8px;
+  padding: 24px 24px 8px;
+}
+
+.el-dialog__title {
+  color: var(--app-text-primary);
+  font-size: 20px;
+  font-weight: 800;
 }
 
 .el-dialog__body {
@@ -84,22 +146,51 @@ select {
 }
 
 .el-table {
-  --el-table-header-bg-color: #f8fafc;
+  --el-table-header-bg-color: rgba(248, 250, 252, 0.96);
   --el-table-row-hover-bg-color: #f8fbff;
-  border-radius: 18px;
+  --el-table-border-color: rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
   overflow: hidden;
 }
 
+.el-table::before {
+  display: none;
+}
+
 .el-table th.el-table__cell {
-  color: #475569;
-  font-weight: 700;
+  color: var(--app-text-secondary);
+  font-weight: 800;
+  font-size: 13px;
 }
 
 .el-table td.el-table__cell,
 .el-table th.el-table__cell {
-  padding-block: 14px;
+  padding-block: 16px;
 }
 
 .el-empty {
-  padding-block: 24px;
+  padding-block: 30px;
+}
+
+.el-progress-bar__outer {
+  border-radius: 999px;
+}
+
+.el-progress-bar__inner {
+  border-radius: 999px;
+}
+
+.el-menu {
+  border-right: none;
+}
+
+@media (max-width: 900px) {
+  .el-card__header,
+  .el-card__body,
+  .el-dialog__header,
+  .el-dialog__body,
+  .el-dialog__footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
 }
