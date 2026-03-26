@@ -175,8 +175,8 @@ const createPeerConnection = (peerId: string) => {
     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
   })
 
-  localStream.value?.getTracks().forEach((track) => localStream.value?.addTrack && pc.addTrack(track, localStream.value!))
-  screenStream.value?.getTracks().forEach((track) => screenStream.value?.addTrack && pc.addTrack(track, screenStream.value!))
+  localStream.value?.getTracks().forEach((track) => pc.addTrack(track, localStream.value!))
+  screenStream.value?.getTracks().forEach((track) => pc.addTrack(track, screenStream.value!))
 
   pc.onicecandidate = (event) => {
     if (event.candidate) {
