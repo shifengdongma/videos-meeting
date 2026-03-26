@@ -27,19 +27,27 @@ withDefaults(defineProps<{
 }>(), {
   empty: false,
   emptyText: '暂无媒体流',
-  icon: '▶'
+  icon: '◌'
 })
 </script>
 
 <style scoped>
 .media-tile {
   position: relative;
-  min-height: 300px;
-  background: linear-gradient(180deg, #111827 0%, #020617 100%);
-  border-radius: 28px;
+  min-height: 320px;
+  background:
+    linear-gradient(180deg, rgba(30, 35, 58, 0.98) 0%, rgba(12, 16, 31, 0.98) 100%);
+  border-radius: 30px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
+  box-shadow: 0 26px 62px rgba(12, 16, 31, 0.3);
+}
+.media-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 30%);
+  pointer-events: none;
 }
 .media-head {
   position: absolute;
@@ -59,14 +67,14 @@ withDefaults(defineProps<{
 }
 .media-subtitle {
   margin-top: 4px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.68);
   font-size: 12px;
 }
 .media-body {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 320px;
 }
 .media-placeholder {
   position: absolute;
@@ -79,14 +87,15 @@ withDefaults(defineProps<{
   gap: 12px;
 }
 .placeholder-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.08);
-  font-size: 22px;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
 }
 .placeholder-text {
   font-size: 14px;
@@ -94,7 +103,7 @@ withDefaults(defineProps<{
 :slotted(video) {
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 320px;
   object-fit: cover;
 }
 </style>
