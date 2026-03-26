@@ -84,22 +84,4 @@ onMounted(loadStreams)
 </script>
 
 <style scoped>
-.live-page {
-  display: grid;
-  gap: 24px;
-}
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-.table-card {
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 24px;
-}
-@media (max-width: 960px) {
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-}
 </style>
