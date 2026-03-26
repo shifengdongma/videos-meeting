@@ -16,7 +16,11 @@
         <p class="topic">{{ activeVote.topic }}</p>
       </div>
 
-      <div class="option-list">
+      <div v-if="submitted && results.length" class="submitted-tip">
+        当前议题你已投票，直接展示实时结果。
+      </div>
+
+      <div v-else class="option-list">
         <el-button
           v-for="option in activeVote.options"
           :key="option.id"
@@ -27,8 +31,6 @@
           {{ option.content }}
         </el-button>
       </div>
-
-      <div v-if="submitted" class="submitted-tip">你已完成当前表决，等待实时结果更新。</div>
     </div>
 
     <div v-else class="empty-wrap">
