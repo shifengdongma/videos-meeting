@@ -13,10 +13,10 @@ const props = defineProps<{
 }>()
 
 const tagType = computed(() => {
-  if (['admin', 'ongoing', 'live'].includes(props.status || '')) return 'danger'
-  if (['host', 'scheduled'].includes(props.status || '')) return 'warning'
-  if (['ended', 'offline'].includes(props.status || '')) return 'info'
-  return 'success'
+  if (['scheduled', 'host'].includes(props.status || '')) return 'success'
+  if (['ongoing', 'live', 'admin'].includes(props.status || '')) return 'warning'
+  if (['ended', 'offline'].includes(props.status || '')) return 'danger'
+  return 'info'
 })
 </script>
 
@@ -29,23 +29,23 @@ const tagType = computed(() => {
   border: 1px solid transparent;
 }
 :deep(.status-tag.el-tag--danger) {
-  color: #9f1239;
-  background: rgba(244, 63, 94, 0.1);
-  border-color: rgba(244, 63, 94, 0.14);
+  color: #b85a5a;
+  background: rgba(229, 115, 115, 0.12);
+  border-color: rgba(229, 115, 115, 0.18);
 }
 :deep(.status-tag.el-tag--warning) {
-  color: #b45309;
-  background: rgba(245, 158, 11, 0.1);
-  border-color: rgba(245, 158, 11, 0.16);
+  color: #a26c00;
+  background: rgba(251, 192, 45, 0.18);
+  border-color: rgba(251, 192, 45, 0.2);
 }
 :deep(.status-tag.el-tag--info) {
-  color: #475569;
-  background: rgba(148, 163, 184, 0.12);
-  border-color: rgba(148, 163, 184, 0.16);
+  color: var(--color-primary);
+  background: rgba(46, 58, 89, 0.08);
+  border-color: rgba(46, 58, 89, 0.14);
 }
 :deep(.status-tag.el-tag--success) {
-  color: #047857;
-  background: rgba(16, 185, 129, 0.08);
-  border-color: rgba(16, 185, 129, 0.14);
+  color: #157554;
+  background: rgba(30, 158, 111, 0.1);
+  border-color: rgba(30, 158, 111, 0.16);
 }
 </style>
