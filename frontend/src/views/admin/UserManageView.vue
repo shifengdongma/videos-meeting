@@ -1,5 +1,5 @@
 <template>
-  <div class="user-page">
+  <div class="user-page app-page">
     <PageHeader
       eyebrow="Access control"
       title="用户管理"
