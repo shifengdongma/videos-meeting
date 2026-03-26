@@ -1,5 +1,5 @@
 <template>
-  <div class="meeting-page">
+  <div class="meeting-page app-page">
     <PageHeader
       eyebrow="Meeting center"
       title="会议中心"
