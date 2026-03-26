@@ -6,15 +6,6 @@
         <h1>会议室 #{{ meetingId }}</h1>
         <p>统一管理本地音视频、桌面共享、远端参会流与在线表决。</p>
       </div>
-      <div class="room-actions">
-        <el-button type="primary" @click="toggleCamera">
-          {{ localStream ? '关闭摄像头/麦克风' : '打开摄像头/麦克风' }}
-        </el-button>
-        <el-button @click="toggleScreenShare">
-          {{ screenStream ? '停止桌面共享' : '桌面共享' }}
-        </el-button>
-        <el-button v-if="canStartVote" @click="showVoteDialog = true">发起表决</el-button>
-      </div>
     </div>
 
     <div class="room-summary">
@@ -35,11 +26,11 @@
     <div class="room-layout">
       <div class="media-section">
         <div class="video-grid">
-          <MediaTile title="本地画面" subtitle="摄像头与麦克风" :empty="!localStream" empty-text="尚未开启本地设备">
+          <MediaTile class="media-tile-main" title="本地画面" subtitle="摄像头与麦克风" :empty="!localStream" empty-text="尚未开启本地设备">
             <video ref="localVideoRef" autoplay muted playsinline />
           </MediaTile>
 
-          <MediaTile title="桌面共享" subtitle="屏幕内容同步" :empty="!screenStream" empty-text="尚未开启桌面共享" icon="⌘">
+          <MediaTile class="media-tile-main" title="桌面共享" subtitle="屏幕内容同步" :empty="!screenStream" empty-text="尚未开启桌面共享" icon="◌">
             <video ref="screenVideoRef" autoplay muted playsinline />
           </MediaTile>
 
@@ -55,6 +46,16 @@
               :ref="(el) => bindRemoteVideo(el as HTMLVideoElement | null, stream.mediaStream)"
             />
           </MediaTile>
+        </div>
+
+        <div class="floating-toolbar">
+          <el-button type="primary" @click="toggleCamera">
+            {{ localStream ? '关闭摄像头/麦克风' : '打开摄像头/麦克风' }}
+          </el-button>
+          <el-button @click="toggleScreenShare">
+            {{ screenStream ? '停止桌面共享' : '桌面共享' }}
+          </el-button>
+          <el-button v-if="canStartVote" @click="showVoteDialog = true">发起表决</el-button>
         </div>
       </div>
 
