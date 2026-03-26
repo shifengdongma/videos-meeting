@@ -1,33 +1,38 @@
 <template>
   <div class="app-shell">
+    <div class="shell-glow shell-glow-a"></div>
+    <div class="shell-glow shell-glow-b"></div>
+
     <aside class="sidebar">
-      <div class="brand-block">
-        <div class="brand-mark">EV</div>
-        <div>
-          <div class="brand-title">视频会议管理系统</div>
-          <div class="brand-subtitle">Meeting · Live · Vote</div>
+      <div class="sidebar-inner">
+        <div class="brand-block">
+          <div class="brand-mark">EV</div>
+          <div>
+            <div class="brand-title">视频会议管理系统</div>
+            <div class="brand-subtitle">Meeting · Live · Vote</div>
+          </div>
         </div>
-      </div>
 
-      <el-menu
-        :default-active="route.path"
-        router
-        class="nav-menu"
-      >
-        <el-menu-item index="/meetings">
-          <span>会议中心</span>
-        </el-menu-item>
-        <el-menu-item index="/live">
-          <span>直播中心</span>
-        </el-menu-item>
-        <el-menu-item v-if="authStore.role === 'admin'" index="/admin/users">
-          <span>后台管理</span>
-        </el-menu-item>
-      </el-menu>
+        <el-menu
+          :default-active="route.path"
+          router
+          class="nav-menu"
+        >
+          <el-menu-item index="/meetings">
+            <span>会议中心</span>
+          </el-menu-item>
+          <el-menu-item index="/live">
+            <span>直播中心</span>
+          </el-menu-item>
+          <el-menu-item v-if="authStore.role === 'admin'" index="/admin/users">
+            <span>后台管理</span>
+          </el-menu-item>
+        </el-menu>
 
-      <div class="sidebar-footer">
-        <div class="footer-label">当前角色</div>
-        <div class="footer-value">{{ roleLabel }}</div>
+        <div class="sidebar-footer">
+          <div class="footer-label">当前角色</div>
+          <div class="footer-value">{{ roleLabel }}</div>
+        </div>
       </div>
     </aside>
 
@@ -39,8 +44,11 @@
         </div>
         <div class="topbar-actions">
           <div class="user-card">
-            <div class="user-name">{{ authStore.user?.username }}</div>
-            <div class="user-role">{{ roleLabel }}</div>
+            <div class="user-avatar">{{ authStore.user?.username?.slice(0, 1).toUpperCase() || 'U' }}</div>
+            <div>
+              <div class="user-name">{{ authStore.user?.username }}</div>
+              <div class="user-role">{{ roleLabel }}</div>
+            </div>
           </div>
           <el-button class="logout-btn" @click="logout">退出登录</el-button>
         </div>
