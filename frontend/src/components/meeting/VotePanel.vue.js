@@ -39,43 +39,47 @@ if (__VLS_ctx.activeVote) {
         ...{ class: "topic" },
     });
     (__VLS_ctx.activeVote.topic);
-    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "option-list" },
-    });
-    for (const [option] of __VLS_getVForSourceType((__VLS_ctx.activeVote.options))) {
-        const __VLS_0 = {}.ElButton;
-        /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
-        // @ts-ignore
-        const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({
-            ...{ 'onClick': {} },
-            key: (option.id),
-            ...{ class: "vote-option" },
-            disabled: (__VLS_ctx.submitted),
-        }));
-        const __VLS_2 = __VLS_1({
-            ...{ 'onClick': {} },
-            key: (option.id),
-            ...{ class: "vote-option" },
-            disabled: (__VLS_ctx.submitted),
-        }, ...__VLS_functionalComponentArgsRest(__VLS_1));
-        let __VLS_4;
-        let __VLS_5;
-        let __VLS_6;
-        const __VLS_7 = {
-            onClick: (...[$event]) => {
-                if (!(__VLS_ctx.activeVote))
-                    return;
-                __VLS_ctx.emit('submit', option.id);
-            }
-        };
-        __VLS_3.slots.default;
-        (option.content);
-        var __VLS_3;
-    }
-    if (__VLS_ctx.submitted) {
+    if (__VLS_ctx.submitted && __VLS_ctx.results.length) {
         __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
             ...{ class: "submitted-tip" },
         });
+    }
+    else {
+        __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
+            ...{ class: "option-list" },
+        });
+        for (const [option] of __VLS_getVForSourceType((__VLS_ctx.activeVote.options))) {
+            const __VLS_0 = {}.ElButton;
+            /** @type {[typeof __VLS_components.ElButton, typeof __VLS_components.elButton, typeof __VLS_components.ElButton, typeof __VLS_components.elButton, ]} */ ;
+            // @ts-ignore
+            const __VLS_1 = __VLS_asFunctionalComponent(__VLS_0, new __VLS_0({
+                ...{ 'onClick': {} },
+                key: (option.id),
+                ...{ class: "vote-option" },
+                disabled: (__VLS_ctx.submitted),
+            }));
+            const __VLS_2 = __VLS_1({
+                ...{ 'onClick': {} },
+                key: (option.id),
+                ...{ class: "vote-option" },
+                disabled: (__VLS_ctx.submitted),
+            }, ...__VLS_functionalComponentArgsRest(__VLS_1));
+            let __VLS_4;
+            let __VLS_5;
+            let __VLS_6;
+            const __VLS_7 = {
+                onClick: (...[$event]) => {
+                    if (!(__VLS_ctx.activeVote))
+                        return;
+                    if (!!(__VLS_ctx.submitted && __VLS_ctx.results.length))
+                        return;
+                    __VLS_ctx.emit('submit', option.id);
+                }
+            };
+            __VLS_3.slots.default;
+            (option.content);
+            var __VLS_3;
+        }
     }
 }
 else {
@@ -134,9 +138,9 @@ if (__VLS_ctx.results.length) {
 /** @type {__VLS_StyleScopedClasses['topic-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['topic-label']} */ ;
 /** @type {__VLS_StyleScopedClasses['topic']} */ ;
+/** @type {__VLS_StyleScopedClasses['submitted-tip']} */ ;
 /** @type {__VLS_StyleScopedClasses['option-list']} */ ;
 /** @type {__VLS_StyleScopedClasses['vote-option']} */ ;
-/** @type {__VLS_StyleScopedClasses['submitted-tip']} */ ;
 /** @type {__VLS_StyleScopedClasses['empty-wrap']} */ ;
 /** @type {__VLS_StyleScopedClasses['results-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['results-title']} */ ;

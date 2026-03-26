@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import { createVote, fetchVotes, submitVote } from '../../api/votes';
@@ -63,6 +63,10 @@ const cleanupStream = (streamRef, videoRef) => {
 const resetVoteState = () => {
     submitted.value = false;
     voteResults.value = [];
+};
+const syncVoteState = (vote) => {
+    submitted.value = !!vote?.submitted;
+    voteResults.value = vote?.results ?? [];
 };
 const upsertVote = (vote) => {
     votes.value = [vote, ...votes.value.filter((item) => item.id !== vote.id)];
@@ -150,7 +154,6 @@ const handleSignalMessage = async (raw) => {
     if (payload.to !== selfId) {
         if (payload.type === 'vote-started') {
             upsertVote(payload.vote);
-            resetVoteState();
         }
         if (payload.type === 'vote-result' && activeVote.value?.id === payload.voteId) {
             voteResults.value = payload.options;
@@ -180,6 +183,9 @@ const connectRoom = () => {
 const loadVotes = async () => {
     votes.value = await fetchVotes(meetingId);
 };
+watch(activeVote, (vote) => {
+    syncVoteState(vote);
+}, { immediate: true });
 const startVote = async () => {
     await createVote({
         meeting_id: meetingId,
@@ -199,6 +205,11 @@ const handleVoteSubmit = async (optionId) => {
     if (activeVote.value?.id === voteId) {
         voteResults.value = result.options;
         submitted.value = true;
+        const currentVote = activeVote.value;
+        if (currentVote) {
+            currentVote.submitted = true;
+            currentVote.results = result.options;
+        }
     }
     ElMessage.success('投票成功');
 };
