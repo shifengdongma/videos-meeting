@@ -23,14 +23,14 @@
 .auth-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.08fr 0.92fr;
   background:
     radial-gradient(circle at top left, rgba(99, 102, 241, 0.22), transparent 35%),
     radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 30%),
     linear-gradient(135deg, #eef2ff 0%, #f8fafc 45%, #eff6ff 100%);
 }
 .brand-panel {
-  padding: 72px 64px;
+  padding: 78px 68px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,28 +48,30 @@
 }
 .brand-panel h1 {
   margin: 0;
-  font-size: 48px;
-  line-height: 1.1;
+  font-size: clamp(42px, 5vw, 54px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
   color: #0f172a;
 }
 .brand-panel p {
-  margin: 24px 0 0;
+  margin: 26px 0 0;
   max-width: 560px;
   color: #475569;
   font-size: 18px;
   line-height: 1.8;
 }
 .feature-list {
-  margin-top: 36px;
+  margin-top: 38px;
   display: grid;
   gap: 14px;
 }
 .feature-item {
   padding: 18px 20px;
-  border-radius: 18px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
   color: #1e293b;
   font-weight: 600;
 }
@@ -84,10 +86,13 @@
     grid-template-columns: 1fr;
   }
   .brand-panel {
-    padding: 48px 24px 16px;
+    padding: 48px 24px 18px;
   }
   .brand-panel h1 {
     font-size: 36px;
+  }
+  .brand-panel p {
+    font-size: 16px;
   }
   .form-panel {
     padding: 24px;
