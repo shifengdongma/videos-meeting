@@ -17,7 +17,7 @@
       <SummaryCard label="已结束" :value="endedCount" description="已完成的历史会议" />
     </div>
 
-    <el-card class="table-card" shadow="never">
+    <el-card class="table-card app-table-card" shadow="never">
       <el-table :data="meetings" v-loading="loading">
         <el-table-column prop="title" label="主题" min-width="220" />
         <el-table-column prop="start_time" label="开始时间" min-width="180" />
