@@ -73,8 +73,8 @@ const emit = defineEmits<{
 .vote-panel {
   border-radius: 28px;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.96) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
 .panel-head {
@@ -84,7 +84,7 @@ const emit = defineEmits<{
   gap: 12px;
 }
 .panel-eyebrow {
-  color: #6366f1;
+  color: var(--color-primary-hover);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -93,19 +93,19 @@ const emit = defineEmits<{
 .panel-head h3 {
   margin: 10px 0 0;
   font-size: 24px;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .panel-status {
   padding: 8px 12px;
   border-radius: 999px;
-  background: #e2e8f0;
-  color: #475569;
+  background: rgba(148, 163, 184, 0.14);
+  color: var(--color-text-secondary);
   font-size: 12px;
   font-weight: 700;
 }
 .panel-status.active {
-  background: rgba(99, 102, 241, 0.12);
-  color: #4f46e5;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary-hover);
 }
 .vote-body {
   margin-top: 20px;
@@ -113,18 +113,18 @@ const emit = defineEmits<{
 .topic-card {
   padding: 18px;
   border-radius: 18px;
-  background: #f8fafc;
+  background: rgba(248, 250, 252, 0.9);
   border: 1px solid rgba(148, 163, 184, 0.14);
 }
 .topic-label {
-  color: #64748b;
+  color: var(--color-text-muted);
   font-size: 12px;
 }
 .topic {
   margin: 10px 0 0;
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .option-list {
   margin-top: 18px;
@@ -134,12 +134,12 @@ const emit = defineEmits<{
 .vote-option {
   justify-content: flex-start;
   min-height: 46px;
-  border-radius: 14px;
+  border-radius: 16px;
   font-weight: 600;
 }
 .submitted-tip {
   margin-top: 14px;
-  color: #10b981;
+  color: #059669;
   font-size: 13px;
   font-weight: 600;
 }
@@ -155,17 +155,23 @@ const emit = defineEmits<{
   margin-bottom: 14px;
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-primary);
 }
 .result-item + .result-item {
-  margin-top: 14px;
+  margin-top: 16px;
 }
 .result-line {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: #334155;
   font-size: 14px;
+}
+:deep(.el-progress-bar__outer) {
+  background: rgba(148, 163, 184, 0.18);
+}
+:deep(.el-progress-bar__inner) {
+  transition: width 0.5s ease;
 }
 </style>
