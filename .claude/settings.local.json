@@ -5,7 +5,7 @@
       "Bash(python -m pip install -r requirements.txt)",
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(uvicorn app.main:app --host 127.0.0.1 --port 8000)",
+      "Bash(uvicorn app.main:app --host 127.0.0.1 --port 8001)",
       "Bash(python:*)",
       "Skill(update-config)",
       "Bash(git -C \"G:/videos meeting\" branch --show-current)",
