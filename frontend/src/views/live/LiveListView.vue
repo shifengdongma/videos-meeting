@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="scope">
-            <el-button link type="primary" @click="openStream(scope.row.id)">进入直播间</el-button>
+            <el-button class="enter-button" type="primary" @click="openStream(scope.row.id)">进入直播间</el-button>
           </template>
         </el-table-column>
       </el-table>
