@@ -34,9 +34,9 @@ withDefaults(defineProps<{
 <style scoped>
 .media-tile {
   position: relative;
-  min-height: 280px;
+  min-height: 300px;
   background: linear-gradient(180deg, #111827 0%, #020617 100%);
-  border-radius: 24px;
+  border-radius: 28px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 24px 60px rgba(2, 6, 23, 0.28);
@@ -50,7 +50,7 @@ withDefaults(defineProps<{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 18px 18px 0;
+  padding: 20px 20px 0;
   color: #fff;
 }
 .media-title {
@@ -66,7 +66,7 @@ withDefaults(defineProps<{
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 280px;
+  min-height: 300px;
 }
 .media-placeholder {
   position: absolute;
@@ -94,7 +94,7 @@ withDefaults(defineProps<{
 :slotted(video) {
   width: 100%;
   height: 100%;
-  min-height: 280px;
+  min-height: 300px;
   object-fit: cover;
 }
 </style>
