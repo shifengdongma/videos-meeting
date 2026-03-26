@@ -20,13 +20,24 @@ defineProps<{
 
 <style scoped>
 .summary-card {
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.9) 100%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.summary-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.18);
+  box-shadow: 0 24px 52px rgba(15, 23, 42, 0.1);
 }
 .label {
   color: #64748b;
-  font-size: 13px;
-  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
 }
 .value-row {
   display: flex;
@@ -35,18 +46,27 @@ defineProps<{
   gap: 16px;
 }
 .value {
-  font-size: 30px;
-  font-weight: 700;
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   color: #0f172a;
 }
 .hint {
-  color: #10b981;
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  font-size: 12px;
+  font-weight: 700;
 }
 .description {
-  margin-top: 12px;
+  margin-top: 14px;
   color: #94a3b8;
   font-size: 13px;
+  line-height: 1.7;
 }
 </style>
