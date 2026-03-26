@@ -84,4 +84,7 @@ onMounted(loadUsers)
 .role-select {
   width: 180px;
 }
+:deep(.role-select .el-select__wrapper) {
+  background: linear-gradient(180deg, rgba(247, 249, 252, 0.98) 0%, rgba(255, 255, 255, 0.9) 100%);
+}
 </style>
