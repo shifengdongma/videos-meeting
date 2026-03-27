@@ -1,40 +1,71 @@
 <template>
-  <div class="user-page app-page">
-    <PageHeader
-      eyebrow="Access control"
-      title="管理后台"
-      description="集中维护账号角色与权限分配，帮助管理员快速识别当前系统中的角色结构。"
-    />
+  <div class="space-y-8">
+    <section class="flex items-start justify-between gap-6 rounded-xl bg-white/70 p-6 shadow-sm ring-1 ring-gray-100 backdrop-blur-sm">
+      <div class="max-w-3xl">
+        <div class="text-xs font-semibold uppercase tracking-[0.24em] text-[#2E3A59]/70">Access control</div>
+        <h1 class="mt-3 text-3xl font-bold tracking-tight text-[#2E3A59]">管理后台</h1>
+        <p class="mt-3 text-sm leading-7 text-slate-500">集中维护账号角色与权限分配，帮助管理员快速识别当前系统中的角色结构。</p>
+      </div>
+    </section>
 
-    <div class="summary-grid app-summary-grid" data-columns="4">
-      <SummaryCard label="用户总数" :value="users.length" description="当前系统内的全部账号" tone="primary" />
-      <SummaryCard label="管理员" :value="adminCount" hint="高权限" description="负责系统配置与权限分配" tone="warning" />
-      <SummaryCard label="主持人" :value="hostCount" description="可创建会议与直播的账号" tone="success" />
-      <SummaryCard label="普通用户" :value="userCount" description="参与会议与观看直播的账号" tone="neutral" />
-    </div>
+    <section class="grid grid-cols-4 gap-6">
+      <article class="rounded-xl border border-gray-100 bg-white/80 p-6 shadow-sm backdrop-blur-md transition-shadow hover:shadow-md">
+        <div class="text-sm font-medium text-slate-500">用户总数</div>
+        <div class="mt-4 text-4xl font-bold text-[#2E3A59]">{{ users.length }}</div>
+        <p class="mt-3 text-sm leading-6 text-slate-500">当前系统内的全部账号</p>
+      </article>
+      <article class="rounded-xl border border-gray-100 bg-white/80 p-6 shadow-sm backdrop-blur-md transition-shadow hover:shadow-md">
+        <div class="text-sm font-medium text-slate-500">管理员</div>
+        <div class="mt-4 text-4xl font-bold text-[#E57373]">{{ adminCount }}</div>
+        <p class="mt-3 text-sm leading-6 text-slate-500">负责系统配置与权限分配</p>
+      </article>
+      <article class="rounded-xl border border-gray-100 bg-white/80 p-6 shadow-sm backdrop-blur-md transition-shadow hover:shadow-md">
+        <div class="text-sm font-medium text-slate-500">主持人</div>
+        <div class="mt-4 text-4xl font-bold text-[#FBC02D]">{{ hostCount }}</div>
+        <p class="mt-3 text-sm leading-6 text-slate-500">可创建会议与直播的账号</p>
+      </article>
+      <article class="rounded-xl border border-gray-100 bg-white/80 p-6 shadow-sm backdrop-blur-md transition-shadow hover:shadow-md">
+        <div class="text-sm font-medium text-slate-500">普通用户</div>
+        <div class="mt-4 text-4xl font-bold text-[#1E9E6F]">{{ userCount }}</div>
+        <p class="mt-3 text-sm leading-6 text-slate-500">参与会议与观看直播的账号</p>
+      </article>
+    </section>
 
-    <el-card class="table-card app-table-card" shadow="never">
-      <el-table :data="users" v-loading="loading">
+    <section class="overflow-hidden rounded-xl bg-white shadow-sm">
+      <el-table :data="users" v-loading="loading" class="user-table">
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="username" label="用户名" min-width="220" />
         <el-table-column label="当前角色" width="140">
           <template #default="scope">
-            <StatusTag :text="roleText(scope.row.role)" :status="scope.row.role" />
+            <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium" :class="roleBadgeClass(scope.row.role)">
+              {{ roleText(scope.row.role) }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="角色调整" min-width="220">
           <template #default="scope">
-            <el-select :model-value="scope.row.role" class="role-select" @change="(value: Role) => changeRole(scope.row.id, value)">
-              <el-option label="管理员" value="admin" />
-              <el-option label="主持人" value="host" />
-              <el-option label="普通用户" value="user" />
-            </el-select>
+            <div class="role-select-wrapper">
+              <select
+                :value="scope.row.role"
+                class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-4 pr-10 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                @change="changeRole(scope.row.id, ($event.target as HTMLSelectElement).value as Role)"
+              >
+                <option value="admin">管理员</option>
+                <option value="host">主持人</option>
+                <option value="user">普通用户</option>
+              </select>
+              <span class="role-select-arrow" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.51a.75.75 0 01-1.08 0l-4.25-4.51a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
           </template>
         </el-table-column>
       </el-table>
 
       <EmptyState v-if="!loading && !users.length" description="当前没有可管理的用户账号。" />
-    </el-card>
+    </section>
   </div>
 </template>
 
@@ -42,10 +73,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import PageHeader from '../../components/layout/PageHeader.vue'
 import EmptyState from '../../components/ui/EmptyState.vue'
-import StatusTag from '../../components/ui/StatusTag.vue'
-import SummaryCard from '../../components/ui/SummaryCard.vue'
 import { fetchUsers, updateUserRole } from '../../api/users'
 import type { UserProfile, Role } from '../../types/auth'
 
@@ -60,6 +88,12 @@ const roleText = (role: Role) => {
   if (role === 'admin') return '管理员'
   if (role === 'host') return '主持人'
   return '普通用户'
+}
+
+const roleBadgeClass = (role: Role) => {
+  if (role === 'admin') return 'bg-orange-100 text-orange-700'
+  if (role === 'host') return 'bg-amber-100 text-amber-700'
+  return 'bg-emerald-100 text-emerald-700'
 }
 
 const loadUsers = async () => {
@@ -81,10 +115,40 @@ onMounted(loadUsers)
 </script>
 
 <style scoped>
-.role-select {
-  width: 180px;
+.role-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
-:deep(.role-select .el-select__wrapper) {
-  background: linear-gradient(180deg, rgba(247, 249, 252, 0.98) 0%, rgba(255, 255, 255, 0.9) 100%);
+
+.role-select-wrapper select {
+  min-height: 40px;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.role-select-arrow {
+  pointer-events: none;
+  position: absolute;
+  right: 12px;
+  display: inline-flex;
+  height: 16px;
+  width: 16px;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.role-select-arrow svg {
+  height: 16px;
+  width: 16px;
+}
+
+:deep(.user-table .el-table__row) {
+  transition: background-color 180ms ease;
+}
+
+:deep(.user-table .el-table__row:hover > td.el-table__cell) {
+  background: #f9fafb;
 }
 </style>
