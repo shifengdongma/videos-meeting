@@ -94,6 +94,8 @@ const pageTitle = computed(() => {
   return '会议中心'
 })
 
+const isActive = (path: string) => route.path === path || route.path.startsWith(`${path}/`)
+
 const roleLabel = computed(() => {
   if (authStore.role === 'admin') return '系统管理员'
   if (authStore.role === 'host') return '会议主持人'
