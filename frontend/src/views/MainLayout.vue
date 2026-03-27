@@ -17,7 +17,7 @@
           :key="item.path"
           :to="item.path"
           class="group flex items-center gap-3 border-l-4 px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-          :class="route.path === item.path ? 'border-blue-400 bg-white/10 text-white' : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'"
+          :class="isActive(item.path) ? 'border-blue-400 bg-white/10 text-white' : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'"
         >
           <component :is="item.icon" class="h-5 w-5 shrink-0" aria-hidden="true" />
           <span>{{ item.label }}</span>
