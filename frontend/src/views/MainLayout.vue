@@ -1,69 +1,69 @@
 <template>
-  <div class="app-shell">
-    <div class="shell-glow shell-glow-a"></div>
-    <div class="shell-glow shell-glow-b"></div>
-
-    <aside class="sidebar">
-      <div class="sidebar-inner">
-        <div class="brand-block">
-          <div class="brand-mark">EV</div>
-          <div>
-            <div class="brand-title">视频会议管理系统</div>
-            <div class="brand-subtitle">Meeting · Live · Vote</div>
-          </div>
+  <div class="min-h-screen bg-[#F4F6F8] text-slate-900">
+    <aside class="fixed left-0 top-0 z-30 flex h-screen w-64 flex-col bg-[#2E3A59] text-white shadow-2xl">
+      <div class="flex items-center gap-3 border-b border-white/10 px-6 py-6">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sm font-bold tracking-[0.2em] text-white">
+          EV
         </div>
+        <div>
+          <div class="text-sm font-semibold">视频会议管理系统</div>
+          <div class="mt-1 text-xs text-white/60">Meeting · Live · Vote</div>
+        </div>
+      </div>
 
-        <el-menu
-          :default-active="route.path"
-          router
-          class="nav-menu"
+      <nav class="flex-1 px-0 py-6">
+        <router-link
+          v-for="item in navItems"
+          :key="item.path"
+          :to="item.path"
+          class="group flex items-center gap-3 border-l-4 px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+          :class="route.path === item.path ? 'border-blue-400 bg-white/10 text-white' : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'"
         >
-          <el-menu-item index="/meetings">
-            <span>会议中心</span>
-          </el-menu-item>
-          <el-menu-item index="/live">
-            <span>直播中心</span>
-          </el-menu-item>
-          <el-menu-item v-if="authStore.role === 'admin'" index="/admin/users">
-            <span>后台管理</span>
-          </el-menu-item>
-        </el-menu>
+          <component :is="item.icon" class="h-5 w-5 shrink-0" aria-hidden="true" />
+          <span>{{ item.label }}</span>
+        </router-link>
+      </nav>
 
-        <div class="sidebar-footer">
-          <div class="footer-label">当前角色</div>
-          <div class="footer-value">{{ roleLabel }}</div>
-        </div>
+      <div class="border-t border-white/10 px-6 py-5">
+        <div class="text-xs text-white/60">当前角色</div>
+        <div class="mt-2 text-sm font-semibold text-white">{{ roleLabel }}</div>
       </div>
     </aside>
 
-    <div class="main-panel">
-      <header class="topbar">
+    <div class="ml-64 min-h-screen bg-[#F4F6F8] p-8">
+      <header class="mb-8 flex items-start justify-between gap-6">
         <div>
-          <div class="topbar-label">统一协作平台</div>
-          <div class="topbar-title">{{ pageTitle }}</div>
+          <div class="text-xs font-semibold uppercase tracking-[0.24em] text-[#2E3A59]/70">统一协作平台</div>
+          <div class="mt-3 text-3xl font-bold tracking-tight text-[#2E3A59]">{{ pageTitle }}</div>
         </div>
-        <div class="topbar-actions">
-          <div class="user-card">
-            <div class="user-avatar">{{ authStore.user?.username?.slice(0, 1).toUpperCase() || 'U' }}</div>
-            <div>
-              <div class="user-name">{{ authStore.user?.username }}</div>
-              <div class="user-role">{{ roleLabel }}</div>
-            </div>
+
+        <div class="flex min-h-[64px] min-w-[220px] items-center gap-4 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
+          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[#2E3A59]/10 text-sm font-bold uppercase text-[#2E3A59]">
+            {{ authStore.user?.username?.slice(0, 1).toUpperCase() || 'U' }}
           </div>
-          <el-button class="logout-btn" @click="logout">退出登录</el-button>
+          <div class="min-w-0 flex-1">
+            <div class="truncate text-sm font-semibold text-slate-900">{{ authStore.user?.username }}</div>
+            <div class="mt-1 text-xs text-slate-500">{{ roleLabel }}</div>
+          </div>
+          <button
+            type="button"
+            class="inline-flex min-h-[44px] items-center rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-slate-600 transition-colors duration-200 hover:bg-gray-50 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2E3A59]/30"
+            @click="logout"
+          >
+            退出登录
+          </button>
         </div>
       </header>
 
-      <main class="content-area">
-        <div class="content-inner">
-          <router-view />
-        </div>
+      <main>
+        <router-view />
       </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { CalendarDaysIcon, SignalIcon, UserGroupIcon } from '@heroicons/vue/24/outline'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -72,6 +72,19 @@ import { useAuthStore } from '../stores/auth'
 const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
+
+const navItems = computed(() => {
+  const items = [
+    { path: '/meetings', label: '会议中心', icon: CalendarDaysIcon },
+    { path: '/live', label: '直播中心', icon: SignalIcon }
+  ]
+
+  if (authStore.role === 'admin') {
+    items.push({ path: '/admin/users', label: '后台管理', icon: UserGroupIcon })
+  }
+
+  return items
+})
 
 const pageTitle = computed(() => {
   if (route.path.startsWith('/meetings/')) return '会议控制台'
@@ -92,175 +105,3 @@ const logout = () => {
   router.push('/login')
 }
 </script>
-
-<style scoped>
-.app-shell {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: var(--app-shell-sidebar-width) minmax(0, 1fr);
-  background:
-    radial-gradient(circle at top left, rgba(46, 58, 89, 0.12), transparent 24%),
-    linear-gradient(180deg, #f9fbfc 0%, #eef2f5 100%);
-}
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  padding: 30px 20px 22px;
-  background: var(--color-sidebar);
-  color: #fff;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-}
-.brand-block {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 0 10px 26px;
-}
-.brand-mark {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%);
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: 0 18px 36px rgba(10, 14, 30, 0.24);
-  backdrop-filter: blur(12px);
-}
-.brand-title {
-  font-size: 16px;
-  font-weight: 700;
-}
-.brand-subtitle {
-  margin-top: 4px;
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 12px;
-}
-.nav-menu {
-  flex: 1;
-  border-right: none;
-  background: transparent;
-}
-:deep(.nav-menu .el-menu-item) {
-  height: 52px;
-  margin-bottom: 8px;
-  border-radius: 16px;
-  color: rgba(255, 255, 255, 0.74);
-  font-weight: 600;
-  transition: background-color var(--motion-fast) ease, transform var(--motion-fast) ease, color var(--motion-fast) ease;
-}
-:deep(.nav-menu .el-menu-item:hover) {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  transform: translateX(2px);
-}
-:deep(.nav-menu .el-menu-item.is-active) {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
-  color: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-.sidebar-footer {
-  margin-top: 20px;
-  padding: 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-}
-.footer-label {
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 12px;
-}
-.footer-value {
-  margin-top: 6px;
-  font-size: 15px;
-  font-weight: 700;
-}
-.main-panel {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: var(--app-shell-topbar-padding-top) var(--app-shell-gutter) var(--app-shell-topbar-padding-bottom);
-}
-.topbar-label {
-  color: var(--color-primary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.topbar-title {
-  margin-top: 8px;
-  font-size: clamp(28px, 3vw, 34px);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--color-text-primary);
-}
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.user-card {
-  padding: 10px 14px;
-  border-radius: 18px;
-  background: var(--app-surface-glass);
-  border: 1px solid rgba(46, 58, 89, 0.12);
-  box-shadow: 0 10px 30px rgba(26, 31, 59, 0.08);
-  backdrop-filter: blur(14px);
-}
-.user-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-.user-role {
-  margin-top: 4px;
-  color: var(--color-text-muted);
-  font-size: 12px;
-}
-.logout-btn {
-  border-radius: 12px;
-}
-.content-area {
-  flex: 1;
-  padding: 0 var(--app-shell-gutter) var(--app-shell-gutter);
-}
-.content-inner {
-  min-height: 100%;
-}
-@media (max-width: 1100px) {
-  .app-shell {
-    grid-template-columns: 1fr;
-  }
-  .sidebar {
-    padding-bottom: 14px;
-  }
-  .topbar,
-  .content-area {
-    padding-left: var(--app-shell-gutter-compact);
-    padding-right: var(--app-shell-gutter-compact);
-  }
-}
-@media (max-width: 720px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .topbar-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-</style>
