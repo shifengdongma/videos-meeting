@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
 from app.api.live_streams import router as live_stream_router
+from app.api.meeting_templates import router as meeting_template_router
 from app.api.meetings import router as meeting_router
 from app.api.users import router as user_router
 from app.api.votes import router as vote_router
@@ -26,6 +27,7 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth_router, prefix=settings.api_v1_prefix)
 app.include_router(user_router, prefix=settings.api_v1_prefix)
 app.include_router(meeting_router, prefix=settings.api_v1_prefix)
+app.include_router(meeting_template_router, prefix=settings.api_v1_prefix)
 app.include_router(live_stream_router, prefix=settings.api_v1_prefix)
 app.include_router(vote_router, prefix=settings.api_v1_prefix)
 app.include_router(ws_router)
